@@ -127,14 +127,14 @@ public class MainActivity extends Activity implements SensorEventListener {
                             pressedButtons.add(btnName);
                             send("btn:" + btnName + "_down"); // Send initial down
                         }
-                        break;
+                        return false;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         if (pressedButtons.contains(btnName)) {
                             pressedButtons.remove(btnName);
                             send("btn:" + btnName + "_up"); // Send up once
                         }
-                        break;
+                        return false;
                 }
                 return true;
             });
