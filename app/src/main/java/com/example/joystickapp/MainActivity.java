@@ -14,6 +14,11 @@ import android.widget.Button;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
@@ -22,6 +27,11 @@ public class MainActivity extends Activity implements SensorEventListener {
     private InetAddress serverAddr;
     private final int serverPort = 9876;
     private SeekBar slider;
+
+    // Set to keep track of currently pressed buttons
+    private final Set<String> pressedButtons = new HashSet<>();
+    // Scheduler for sending continuous button presses
+    private ScheduledExecutorService buttonSenderScheduler;
 
     private void send(String msg) {
         new Thread(() -> {
@@ -61,7 +71,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         slider2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float adjustedYaw = progress - 90; // Convert slider [0..180] to [-90..+90]
+                float adjustedYaw = progress - 90;
                 send("manual_yaw:" + adjustedYaw);
             }
 
@@ -70,7 +80,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                seekBar.setProgress(90); // Reset to center on release
+                seekBar.setProgress(90);
                 send("manual_yaw:0");
             }
         });
@@ -113,18 +123,42 @@ public class MainActivity extends Activity implements SensorEventListener {
             btn.setOnTouchListener((v, event) -> {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        send("btn:" + btnName + "_down");
+                        if (!pressedButtons.contains(btnName)) {
+                            pressedButtons.add(btnName);
+                            send("btn:" + btnName + "_down"); // Send initial down
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        send("btn:" + btnName + "_up");
+                        if (pressedButtons.contains(btnName)) {
+                            pressedButtons.remove(btnName);
+                            send("btn:" + btnName + "_up"); // Send up once
+                        }
                         break;
                 }
                 return true;
             });
         }
 
+        // Initialize and start the scheduler to send continuous button presses
+        buttonSenderScheduler = Executors.newSingleThreadScheduledExecutor();
+        buttonSenderScheduler.scheduleAtFixedRate(() -> {
+            synchronized (pressedButtons) {
+                for (String btnName : pressedButtons) {
+                    send("btn:" + btnName + "_down"); // Re-send down for held buttons
+                }
+            }
+        }, 0, 50, TimeUnit.MILLISECONDS); // Send every 50ms (adjust as needed)
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Shut down the scheduler when the activity is destroyed
+        if (buttonSenderScheduler != null && !buttonSenderScheduler.isShutdown()) {
+            buttonSenderScheduler.shutdownNow();
+        }
+        sensorManager.unregisterListener(this);
     }
 
     @Override
