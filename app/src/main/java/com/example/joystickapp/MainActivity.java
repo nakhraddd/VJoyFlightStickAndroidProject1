@@ -6,6 +6,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Button;
 
@@ -73,33 +75,55 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
         });
 
-        findViewById(R.id.gear).setOnClickListener(v -> send("btn:gear"));
-        findViewById(R.id.brakes).setOnClickListener(v -> send("btn:brakes"));
-        findViewById(R.id.spoiler).setOnClickListener(v -> send("btn:spoiler"));
-        findViewById(R.id.flapsUp).setOnClickListener(v -> send("btn:flapsup"));
-        findViewById(R.id.flapsDown).setOnClickListener(v -> send("btn:flapsdown"));
-
         findViewById(R.id.lr).setOnClickListener(v -> send("lr"));
         findViewById(R.id.kr).setOnClickListener(v -> send("kr"));
 
-        findViewById(R.id.btn0).setOnClickListener(v -> send("btn:b0"));
-        findViewById(R.id.btn1).setOnClickListener(v -> send("btn:b1"));
-        findViewById(R.id.btn2).setOnClickListener(v -> send("btn:b2"));
-        findViewById(R.id.btn3).setOnClickListener(v -> send("btn:b3"));
-        findViewById(R.id.btn4).setOnClickListener(v -> send("btn:b4"));
-        findViewById(R.id.btn5).setOnClickListener(v -> send("btn:b5"));
-        findViewById(R.id.btn6).setOnClickListener(v -> send("btn:b6"));
-        findViewById(R.id.btn7).setOnClickListener(v -> send("btn:b7"));
-        findViewById(R.id.btn8).setOnClickListener(v -> send("btn:b8"));
-        findViewById(R.id.btn9).setOnClickListener(v -> send("btn:b9"));
-        findViewById(R.id.btn11).setOnClickListener(v -> send("btn:b10"));
-        findViewById(R.id.btn10).setOnClickListener(v -> send("btn:b11"));
-        findViewById(R.id.btn12).setOnClickListener(v -> send("btn:b12"));
-        findViewById(R.id.btn13).setOnClickListener(v -> send("btn:b13"));
-        findViewById(R.id.btn14).setOnClickListener(v -> send("btn:b14"));
-        findViewById(R.id.btn15).setOnClickListener(v -> send("btn:b15"));
-        findViewById(R.id.btn16).setOnClickListener(v -> send("btn:b16"));
-        findViewById(R.id.btn17).setOnClickListener(v -> send("btn:b17"));
+        Object[][] buttonMappings = {
+                { R.id.gear, "gear" },
+                { R.id.brakes, "brakes" },
+                { R.id.spoiler, "spoiler" },
+                { R.id.flapsUp, "flapsup" },
+                { R.id.flapsDown, "flapsdown" },
+                { R.id.btn0, "b0" },
+                { R.id.btn1, "b1" },
+                { R.id.btn2, "b2" },
+                { R.id.btn3, "b3" },
+                { R.id.btn4, "b4" },
+                { R.id.btn5, "b5" },
+                { R.id.btn6, "b6" },
+                { R.id.btn7, "b7" },
+                { R.id.btn8, "b8" },
+                { R.id.btn9, "b9" },
+                { R.id.btn10, "b11" },
+                { R.id.btn11, "b10" },
+                { R.id.btn12, "b12" },
+                { R.id.btn13, "b13" },
+                { R.id.btn14, "b14" },
+                { R.id.btn15, "b15" },
+                { R.id.btn16, "b16" },
+                { R.id.btn17, "b17" }
+        };
+
+        for (Object[] mapping : buttonMappings) {
+            int viewId = (int) mapping[0];
+            String btnName = (String) mapping[1];
+
+            View btn = findViewById(viewId);
+
+            btn.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        send("btn:" + btnName + "_down");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        send("btn:" + btnName + "_up");
+                        break;
+                }
+                return true;
+            });
+        }
+
 
     }
 
