@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
 
         slider = findViewById(R.id.slider1);
+
         slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 send("throttle:" + progress);
@@ -68,6 +69,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         });
 
         SeekBar slider2 = findViewById(R.id.slider2);
+        slider2.setProgress(90);
         slider2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
