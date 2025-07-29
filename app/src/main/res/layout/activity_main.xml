@@ -3,16 +3,22 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp">
+    android:padding="0dp">
 
-    <SeekBar
-        android:id="@+id/slider1"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:rotation="270"
-        android:max="100" 
-        android:progress="0"/>
+        android:layout_weight="0.5"
+        >
+        <SeekBar
+            android:id="@+id/slider1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:rotation="270"
+            android:max="100"
+            android:progress="0"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -91,15 +97,21 @@
             android:orientation="horizontal">
             <Button android:id="@+id/gear" android:text="gear" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
             <Button android:id="@+id/btn22" android:text="+" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
-            <SeekBar
-                android:id="@+id/slider2"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="1"
-                android:max="180"
-                android:progress="90" />
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <SeekBar
+                    android:id="@+id/slider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_gravity="center"
+                    android:max="180"
+                    android:progress="90" />
+            </LinearLayout>
         </LinearLayout>
 
 
