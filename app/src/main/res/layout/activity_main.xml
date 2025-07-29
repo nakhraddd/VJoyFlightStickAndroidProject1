@@ -72,6 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button android:id="@+id/brakes" android:text="brakes" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+            <Button android:id="@+id/btn18" android:text="+" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+            <Button android:id="@+id/btn19" android:text="+" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
             <Button android:id="@+id/flapsUp" android:text="↑" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
         </LinearLayout>
 
@@ -79,6 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button android:id="@+id/spoiler" android:text="spoiler" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+            <Button android:id="@+id/btn20" android:text="+" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+            <Button android:id="@+id/btn21" android:text="+" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
             <Button android:id="@+id/flapsDown" android:text="↓" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
@@ -86,6 +90,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button android:id="@+id/gear" android:text="gear" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+            <Button android:id="@+id/btn22" android:text="+" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
             <SeekBar
                 android:id="@+id/slider2"
                 android:layout_width="wrap_content"

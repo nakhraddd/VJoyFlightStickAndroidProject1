@@ -113,7 +113,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                 { R.id.btn14, "b14" },
                 { R.id.btn15, "b15" },
                 { R.id.btn16, "b16" },
-                { R.id.btn17, "b17" }
+                { R.id.btn17, "b17" },
+                { R.id.btn18, "b18" },
+                { R.id.btn19, "b19" },
+                { R.id.btn20, "b20" },
+                { R.id.btn21, "b21" },
+                { R.id.btn22, "b22" }
         };
 
         for (Object[] mapping : buttonMappings) {
