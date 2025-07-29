@@ -125,19 +125,21 @@ public class MainActivity extends Activity implements SensorEventListener {
                     case MotionEvent.ACTION_DOWN:
                         if (!pressedButtons.contains(btnName)) {
                             pressedButtons.add(btnName);
-                            send("btn:" + btnName + "_down"); // Send initial down
+                            send("btn:" + btnName + "_down");
                         }
-                        return false;
+                        break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         if (pressedButtons.contains(btnName)) {
                             pressedButtons.remove(btnName);
-                            send("btn:" + btnName + "_up"); // Send up once
+                            send("btn:" + btnName + "_up");
                         }
-                        return false;
+                        v.performClick();
+                        break;
                 }
-                return true;
+                return false;
             });
+
         }
 
         // Initialize and start the scheduler to send continuous button presses
