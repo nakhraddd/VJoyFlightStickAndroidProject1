@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Button;
 
@@ -27,6 +28,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     private InetAddress serverAddr;
     private final int serverPort = 9876;
     private SeekBar slider;
+    private boolean ipLocked = false;
+    private String serverIp = null;
 
     // Set to keep track of currently pressed buttons
     private final Set<String> pressedButtons = new HashSet<>();
@@ -34,6 +37,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     private ScheduledExecutorService buttonSenderScheduler;
 
     private void send(String msg) {
+        if (!ipLocked || serverAddr == null) return;
+
         new Thread(() -> {
             try {
                 DatagramSocket socket = new DatagramSocket();
@@ -45,15 +50,39 @@ public class MainActivity extends Activity implements SensorEventListener {
         }).start();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            serverAddr = InetAddress.getByName("192.168.8.102");
-        } catch (Exception e) { finish(); }
-
         setContentView(R.layout.activity_main);
+
+        EditText ipField = findViewById(R.id.ip_field);
+        Button ipSetButton = findViewById(R.id.ip_set_button);
+
+        ipSetButton.setOnClickListener(v -> {
+            if (!ipLocked) {
+                String ip = ipField.getText().toString().trim();
+                if (!ip.isEmpty()) {
+                    try {
+                        serverAddr = InetAddress.getByName(ip);
+                        serverIp = ip;
+                        ipLocked = true;
+                        ipField.setEnabled(false);
+                        ipSetButton.setText("Unlock IP");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                ipLocked = false;
+                serverIp = null;
+                ipField.setEnabled(true);
+                ipSetButton.setText("Lock IP");
+            }
+        });
+
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
