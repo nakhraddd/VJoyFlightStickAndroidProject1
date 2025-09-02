@@ -1,6 +1,7 @@
 package com.example.joystickapp;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -60,6 +61,14 @@ public class MainActivity extends Activity implements SensorEventListener {
         EditText ipField = findViewById(R.id.ip_field);
         Button ipSetButton = findViewById(R.id.ip_set_button);
 
+// Load last saved IP
+        SharedPreferences prefs = getSharedPreferences("JoystickAppPrefs", MODE_PRIVATE);
+        String savedIp = prefs.getString("server_ip", "");
+        if (!savedIp.isEmpty()) {
+            ipField.setText(savedIp);
+        }
+
+// Button logic with lock/unlock
         ipSetButton.setOnClickListener(v -> {
             if (!ipLocked) {
                 String ip = ipField.getText().toString().trim();
@@ -70,6 +79,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                         ipLocked = true;
                         ipField.setEnabled(false);
                         ipSetButton.setText("Unlock IP");
+
+                        // Save IP
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("server_ip", ip);
+                        editor.apply();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -81,7 +96,6 @@ public class MainActivity extends Activity implements SensorEventListener {
                 ipSetButton.setText("Lock IP");
             }
         });
-
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);

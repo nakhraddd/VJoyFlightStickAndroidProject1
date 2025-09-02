@@ -15,7 +15,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="ip"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:inputType="number"/>
 
         <Button
             android:id="@+id/ip_set_button"
